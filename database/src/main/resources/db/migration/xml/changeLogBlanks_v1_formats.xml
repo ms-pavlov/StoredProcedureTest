@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="blanks_v1_formats" author="ms-pavlov" context="test">
+        <createSequence cacheSize="371717"
+                        dataType="bigint"
+                        incrementBy="1"
+                        maxValue="9223372036854775807"
+                        minValue="1"
+                        schemaName="public"
+                        sequenceName="formats_formats_id_seq"
+                        startValue="7"/>
+
+        <createTable tableName="formats" schemaName="public">
+            <column name="formats_id" type="BIGINT" defaultValueSequenceNext="formats_formats_id_seq">
+                <constraints primaryKey="true" primaryKeyName="formats_pkey" nullable="false"/>
+            </column>
+            <column name="formats_name" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
+

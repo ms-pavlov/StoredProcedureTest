@@ -1,0 +1,67 @@
+plugins {
+    id 'idea'
+    id "io.spring.dependency-management" version "1.0.11.RELEASE"
+    id 'com.github.johnrengelman.shadow' version '6.1.0' apply false
+    id 'org.liquibase.gradle' version '2.0.4'
+}
+
+idea {
+    project {
+        languageLevel = 17
+    }
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+
+dependencies {
+    liquibaseRuntime 'org.liquibase:liquibase-core'
+    liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl'
+    liquibaseRuntime 'org.postgresql:postgresql'
+}
+apply plugin: "org.liquibase.gradle"
+
+allprojects {
+    group "ru.aokb"
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+
+    apply plugin: "io.spring.dependency-management"
+    dependencyManagement {
+        dependencies {
+            imports {
+                mavenBom("org.springframework.boot:spring-boot-dependencies:2.5.2")
+            }
+            dependency("org.projectlombok:lombok:${Versions.lombok}")
+            dependency("org.testcontainers:junit-jupiter:${Versions.testContainers}")
+            dependency("org.testcontainers:postgresql:${Versions.testContainers}")
+        }
+    }
+
+    configurations.all {
+        resolutionStrategy {
+            failOnVersionConflict()
+        }
+        resolutionStrategy {
+        }
+    }
+}
+
+//print versions from BOM
+task managedVersions {
+    doLast {
+        dependencyManagement.managedVersions.each {
+            println it
+        }
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.with {
+        encoding = 'UTF-8'
+    }
+}
