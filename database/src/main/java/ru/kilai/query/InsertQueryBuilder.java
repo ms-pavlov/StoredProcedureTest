@@ -1,4 +1,6 @@
-package ru.kilai;
+package ru.kilai.query;
+
+import ru.kilai.parameters.QueryParameters;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,12 +17,11 @@ public class InsertQueryBuilder extends AbstractQueryBuilder {
         return new InsertQueryBuilder(connection, tableName);
     }
 
-    public PreparedStatement build() throws SQLException {
-        var statement = getConnection().prepareStatement(String.format(QUERY_TEMPLATE, getTableName(), getColumnsNames(), getParameterTemplate()));
-        var i = 1;
-        for (var item : getColumns().values()) {
-            statement.setObject(i++, item);
-        }
+    @Override
+    public PreparedStatement build(QueryParameters parameters) throws SQLException {
+        var sql = String.format(QUERY_TEMPLATE, getSqlObjectName(), parameters.getFieldsNames(), parameters.getParametersMask());
+        var statement = getConnection().prepareStatement(sql);
+        parameters.setQueryParameters(statement);
         return statement;
     }
 }

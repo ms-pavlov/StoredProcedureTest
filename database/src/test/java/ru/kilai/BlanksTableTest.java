@@ -5,10 +5,15 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.kilai.parameters.SimpleQueryParameters;
+import ru.kilai.query.InsertQueryBuilder;
+import ru.kilai.query.SelectQueryBuilder;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -16,8 +21,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class BlanksTableTest {
     private static final Logger log = LoggerFactory.getLogger(BlanksTableTest.class);
 
-    private static final String FORMAT_NAME = "A5";
-    private static final String BLANK_NAME = "Опросный лист";
+    private static final Map<String, Object> FORMAT_INSERT_PARAMS = Map.of("formats_name", "A5");
+    private static final List<String> FORMAT_SELECT_PARAMS = List.of("formats_name", "formats_id");
+    private static final Map<String, Object> BLANK_INSERT_PARAMS = Map.of("blank_name", "Опросный лист",
+            "blank_two_side", true);
+    private static final List<String> BLANK_SELECT_PARAMS = List.of("blank_id", "blank_name", "blank_two_side",
+            "blank_format_id", "blank_surplus");
+
 
     @Test
     void changeLogFormats() {
@@ -31,37 +41,28 @@ public class BlanksTableTest {
                             liquibase.update("test");
 
                             var statement = InsertQueryBuilder.builder(connection, "formats")
-                                    .column("formats_name", FORMAT_NAME)
-                                    .build();
+                                    .build(new SimpleQueryParameters(FORMAT_INSERT_PARAMS));
                             assertEquals(1, statement.executeUpdate());
 
                             statement = SelectQueryBuilder.builder(connection, "formats")
-                                    .column("formats_id", null)
-                                    .column("formats_name", null)
-                                    .build();
+                                    .build(new SimpleQueryParameters(FORMAT_SELECT_PARAMS));
                             var result = executeAndGetFirstResultSet(statement);
-                            assertEquals(FORMAT_NAME, result.getObject("formats_name"));
+                            assertEquals(FORMAT_INSERT_PARAMS.get("formats_name"), result.getObject("formats_name"));
                             assertNotNull(result.getObject("formats_id"));
                             var seq_value = result.getObject("formats_id");
 
+                            var params = new SimpleQueryParameters(BLANK_INSERT_PARAMS);
+                            params.put("blank_format_id", seq_value);
                             statement = InsertQueryBuilder.builder(connection, "blanks")
-                                    .column("blank_name", BLANK_NAME)
-                                    .column("blank_two_side", true)
-                                    .column("blank_format_id", seq_value)
-                                    .build();
+                                    .build(params);
                             assertEquals(1, statement.executeUpdate());
 
                             statement = SelectQueryBuilder.builder(connection, "blanks")
-                                    .column("blank_id", null)
-                                    .column("blank_name", null)
-                                    .column("blank_two_side", null)
-                                    .column("blank_format_id", null)
-                                    .column("blank_surplus", null)
-                                    .build();
+                                    .build(new SimpleQueryParameters(BLANK_SELECT_PARAMS));
                             result = executeAndGetFirstResultSet(statement);
                             assertNotNull(result.getObject("blank_id"));
-                            assertEquals(BLANK_NAME, result.getObject("blank_name"));
-                            assertEquals(true, result.getObject("blank_two_side"));
+                            assertEquals(BLANK_INSERT_PARAMS.get("blank_name"), result.getObject("blank_name"));
+                            assertEquals(BLANK_INSERT_PARAMS.get("blank_two_side"), result.getObject("blank_two_side"));
                             assertEquals(seq_value, result.getObject("blank_format_id"));
                             assertNotNull(result.getObject("blank_surplus"));
 
