@@ -11,11 +11,11 @@
                         maxValue="9223372036854775807"
                         minValue="1"
                         schemaName="public"
-                        sequenceName="formats_formats_id_seq"
+                        sequenceName="formats_id_seq"
                         startValue="7"/>
 
         <createTable tableName="formats" schemaName="public">
-            <column name="formats_id" type="BIGINT" defaultValueSequenceNext="formats_formats_id_seq">
+            <column name="formats_id" type="BIGINT" defaultValueSequenceNext="formats_id_seq">
                 <constraints primaryKey="true" primaryKeyName="formats_pkey" nullable="false"/>
             </column>
             <column name="formats_name" type="VARCHAR(255)"/>

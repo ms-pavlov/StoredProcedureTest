@@ -11,11 +11,11 @@
                         maxValue="9223372036854775807"
                         minValue="1"
                         schemaName="public"
-                        sequenceName="blanks_blank_id_seq"
+                        sequenceName="blank_id_seq"
                         startValue="1"/>
 
         <createTable tableName="blanks">
-            <column name="blank_id" type="BIGINT" defaultValueSequenceNext="blanks_blank_id_seq">
+            <column name="blank_id" type="BIGINT" defaultValueSequenceNext="blank_id_seq">
                 <constraints primaryKey="true" primaryKeyName="blanks_pkey" nullable="false"/>
             </column>
             <column name="blank_name" type="VARCHAR(255)"/>

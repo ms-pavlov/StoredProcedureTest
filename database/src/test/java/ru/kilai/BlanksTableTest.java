@@ -1,10 +1,13 @@
 package ru.kilai;
 
 import liquibase.exception.LiquibaseException;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,6 +18,7 @@ public class BlanksTableTest {
 
     private static final String FORMAT_NAME = "A5";
     private static final String BLANK_NAME = "Опросный лист";
+
     @Test
     void changeLogFormats() {
         try (var connection = PostgresConnectionPool.getConnection()) {
@@ -26,28 +30,26 @@ public class BlanksTableTest {
                         try {
                             liquibase.update("test");
 
-                            var statement = connection.prepareStatement("INSERT INTO formats (formats_name) VALUES (?)");
-                            statement.setString(1, FORMAT_NAME);
-                            assertEquals(1, statement.executeUpdate());
+                            var statement = InsertQueryBuilder.builder(connection, "formats")
+                                    .column("formats_name", FORMAT_NAME)
+                                    .build();
 
-                            statement = connection.prepareStatement("SELECT CURRVAL('formats_formats_id_seq')");
-                            statement.execute();
-                            var result = statement.getResultSet();
-                            result.next();
+                            statement = CurrentSequenceValueQueryBuilder
+                                    .builder(connection, "formats_id_seq")
+                                    .build();
+                            var result = executeAndGetFirstResultSet(statement);
                             long seq_value = Long.parseLong(result.getObject(1).toString());
 
-                            statement = connection.prepareStatement("INSERT INTO blanks (blank_name, blank_two_side, blank_format_id, blank_surplus) VALUES (?, ?, ?, ?)");
-                            statement.setString(1, BLANK_NAME);
-                            statement.setBoolean(2, false);
-                            statement.setLong(3, seq_value);
-                            statement.setLong(4, 0);
+                            InsertQueryBuilder.builder(connection, "blanks")
+                                    .column("blank_name", BLANK_NAME)
+                                    .column("blank_two_side", false)
+                                    .column("blank_format_id", seq_value)
+                                    .column("blank_surplus", 0)
+                                    .build();
                             assertEquals(1, statement.executeUpdate());
 
-                            statement = connection.prepareStatement("SELECT * FROM blanks");
-                            statement.execute();
-                            result = statement.getResultSet();
-                            result.next();
-
+                            statement = SelectQueryBuilder.builder(connection, "blanks").build();
+                            result = executeAndGetFirstResultSet(statement);
                             assertEquals(BLANK_NAME, result.getObject("blank_name"));
                             assertFalse(result.getBoolean("blank_two_side"));
                             assertEquals(seq_value, result.getLong("blank_format_id"));
@@ -61,5 +63,13 @@ public class BlanksTableTest {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @NotNull
+    private ResultSet executeAndGetFirstResultSet(PreparedStatement statement) throws SQLException {
+        statement.execute();
+        var result = statement.getResultSet();
+        result.next();
+        return result;
     }
 }

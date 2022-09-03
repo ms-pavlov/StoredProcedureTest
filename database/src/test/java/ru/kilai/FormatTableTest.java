@@ -1,10 +1,13 @@
 package ru.kilai;
 
 import liquibase.exception.LiquibaseException;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,21 +28,22 @@ public class FormatTableTest {
                         try {
                             liquibase.update("test");
 
-                            var query = "INSERT INTO formats (formats_name) VALUES (?)";
-                            var statement = connection.prepareStatement(query);
-                            statement.setString(1, FORMAT_NAME);
+                            var statement = InsertQueryBuilder.builder(connection, "formats")
+                                    .column("formats_name", FORMAT_NAME)
+                                    .build();
                             assertEquals(1, statement.executeUpdate());
 
-                            statement = connection.prepareStatement("SELECT CURRVAL('formats_formats_id_seq')");
-                            statement.execute();
-                            var result = statement.getResultSet();
-                            result.next();
+                            statement = CurrentSequenceValueQueryBuilder
+                                    .builder(connection, "formats_id_seq")
+                                    .build();
+                            var result = executeAndGetFirstResultSet(statement);
                             long seq_value = Long.parseLong(result.getObject(1).toString());
 
-                            statement = connection.prepareStatement("SELECT formats_id, formats_name FROM formats");
-                            statement.execute();
-                            result = statement.getResultSet();
-                            result.next();
+                            statement = SelectQueryBuilder.builder(connection, "formats")
+                                    .column("formats_id", null)
+                                    .column("formats_name", null)
+                                    .build();
+                            result = executeAndGetFirstResultSet(statement);
                             assertEquals(FORMAT_NAME, result.getObject("formats_name"));
                             assertEquals(seq_value, result.getObject("formats_id"));
 
@@ -51,5 +55,13 @@ public class FormatTableTest {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @NotNull
+    private ResultSet executeAndGetFirstResultSet(PreparedStatement statement) throws SQLException {
+        statement.execute();
+        var result = statement.getResultSet();
+        result.next();
+        return result;
     }
 }
