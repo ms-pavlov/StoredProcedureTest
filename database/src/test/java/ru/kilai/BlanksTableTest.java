@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class BlanksTableTest {
     private static final Logger log = LoggerFactory.getLogger(BlanksTableTest.class);
@@ -33,27 +33,37 @@ public class BlanksTableTest {
                             var statement = InsertQueryBuilder.builder(connection, "formats")
                                     .column("formats_name", FORMAT_NAME)
                                     .build();
+                            assertEquals(1, statement.executeUpdate());
 
-                            statement = CurrentSequenceValueQueryBuilder
-                                    .builder(connection, "formats_id_seq")
+                            statement = SelectQueryBuilder.builder(connection, "formats")
+                                    .column("formats_id", null)
+                                    .column("formats_name", null)
                                     .build();
                             var result = executeAndGetFirstResultSet(statement);
-                            long seq_value = Long.parseLong(result.getObject(1).toString());
+                            assertEquals(FORMAT_NAME, result.getObject("formats_name"));
+                            assertNotNull(result.getObject("formats_id"));
+                            var seq_value = result.getObject("formats_id");
 
-                            InsertQueryBuilder.builder(connection, "blanks")
+                            statement = InsertQueryBuilder.builder(connection, "blanks")
                                     .column("blank_name", BLANK_NAME)
-                                    .column("blank_two_side", false)
+                                    .column("blank_two_side", true)
                                     .column("blank_format_id", seq_value)
-                                    .column("blank_surplus", 0)
                                     .build();
                             assertEquals(1, statement.executeUpdate());
 
-                            statement = SelectQueryBuilder.builder(connection, "blanks").build();
+                            statement = SelectQueryBuilder.builder(connection, "blanks")
+                                    .column("blank_id", null)
+                                    .column("blank_name", null)
+                                    .column("blank_two_side", null)
+                                    .column("blank_format_id", null)
+                                    .column("blank_surplus", null)
+                                    .build();
                             result = executeAndGetFirstResultSet(statement);
+                            assertNotNull(result.getObject("blank_id"));
                             assertEquals(BLANK_NAME, result.getObject("blank_name"));
-                            assertFalse(result.getBoolean("blank_two_side"));
-                            assertEquals(seq_value, result.getLong("blank_format_id"));
-                            assertEquals(0, result.getLong("blank_surplus"));
+                            assertEquals(true, result.getObject("blank_two_side"));
+                            assertEquals(seq_value, result.getObject("blank_format_id"));
+                            assertNotNull(result.getObject("blank_surplus"));
 
                             connection.rollback();
                         } catch (LiquibaseException | SQLException e) {

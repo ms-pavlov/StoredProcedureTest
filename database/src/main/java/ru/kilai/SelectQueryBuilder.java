@@ -1,10 +1,15 @@
 package ru.kilai;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class SelectQueryBuilder extends AbstractQueryBuilder {
+    private static final Logger log = LoggerFactory.getLogger(SelectQueryBuilder.class);
+
     private static final String QUERY_TEMPLATE = "SELECT %s FROM %s";
 
     public SelectQueryBuilder(Connection connection, String tableName, String queryTemplate) {

@@ -48,9 +48,6 @@ public abstract class AbstractQueryBuilder {
     }
 
     public String getColumnsNames() {
-        if (columns.isEmpty()) {
-            return "*";
-        }
         return String.join(", ", columns.keySet());
     }
 }
