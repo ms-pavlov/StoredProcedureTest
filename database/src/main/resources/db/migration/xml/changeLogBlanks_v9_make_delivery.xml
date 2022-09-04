@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="blanks_v9_make_delivery" author="ms-pavlov" context="test">
+        <createProcedure dbms="postgresql"
+                         encoding="UTF-8"
+                         procedureName="make_delivery"
+                         relativeToChangelogFile="true"
+                         schemaName="public">
+            CREATE OR REPLACE PROCEDURE make_delivery(delivery_count BIGINT, order_position_id BIGINT)
+            LANGUAGE plpgsql
+            AS $BODY$
+            DECLARE delivery_sum BIGINT;
+            BEGIN
+            INSERT INTO delivery (delivery_count, delivery_order_position_id)
+            VALUES (delivery_count, order_position_id);
+
+            SELECT SUM(d.delivery_count) INTO STRICT delivery_sum
+            FROM delivery d
+            WHERE delivery_order_position_id = order_position_id;
+
+            UPDATE order_position
+            SET order_ready = GREATEST(0, order_ready - delivery_count),
+            order_position_is_complete = !(order_position_count - delivery_sum)
+            WHERE order_id = order_position_id;
+
+            RETURN;
+            END;
+            $BODY$;
+        </createProcedure>
+        <rollback>
+            DROP PROCEDURE make_delivery;
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

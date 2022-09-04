@@ -1,10 +1,15 @@
 package ru.kilai.query;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class SimpleJDBCQueryExecutor implements JDBCQueryExecutor {
+    private static final Logger log = LoggerFactory.getLogger(SimpleJDBCQueryExecutor.class);
+
     private final PreparedStatement statement;
 
     private SimpleJDBCQueryExecutor(PreparedStatement statement) {

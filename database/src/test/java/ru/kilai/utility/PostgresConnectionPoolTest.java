@@ -1,4 +1,4 @@
-package ru.kilai;
+package ru.kilai.utility;
 
 import org.junit.jupiter.api.Test;
 

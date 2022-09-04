@@ -8,32 +8,31 @@ import ru.kilai.utility.tests.SequenceCurrentValueTestBuilder;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class BlanksTableTest {
-    private static final Map<String, Object> BLANK_INSERT_PARAMS = Map.of("blank_name", "Опросный лист",
-            "blank_two_side", true);
-    private static final List<String> BLANK_SELECT_PARAMS = List.of("blank_id", "blank_name", "blank_two_side",
-            "blank_format_id", "blank_orders_count");
-
+public class OrderListTableTest {
+    private static final List<String> ORDER_LIST_SELECT_PARAMS = List.of("order_list_id", "order_list_create_date",
+            "order_list_contact_id", "order_list_is_complete");
 
     @Test
-    void changeLogBlanks() {
+    void changeLogContacts() {
         try (var connection = PostgresConnectionPool.getConnection()) {
             LiquibaseTestMaker.builder("classpath:/db/migration/master.xml", connection)
                     .makeTestsAndRollback(
                             InsertAndSelectLiquibaseTestBuilder.builder(connection)
-                                    .sqlObjectName("blank")
-                                    .insertParameters(BLANK_INSERT_PARAMS)
-                                    .selectParameters(BLANK_SELECT_PARAMS)
+                                    .sqlObjectName("order_list")
+                                    .insertParameters(Map.of("order_list_create_date", new Timestamp(new Date().getTime())))
+                                    .selectParameters(ORDER_LIST_SELECT_PARAMS)
                                     .test(this::checks)
                                     .build(),
                             SequenceCurrentValueTestBuilder.builder(connection)
-                                    .sqlObjectName("blank_id_seq")
+                                    .sqlObjectName("order_list_id_seq")
                                     .build()
                     );
         } catch (SQLException e) {
@@ -43,8 +42,8 @@ public class BlanksTableTest {
 
     private void checks(ResultSet result) {
         try {
-            assertNotNull(result.getObject("blank_id"));
-            assertEquals(0L, result.getObject("blank_orders_count"));
+            assertNotNull(result.getObject("order_list_id"));
+            assertFalse(result.getBoolean("order_list_is_complete"));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

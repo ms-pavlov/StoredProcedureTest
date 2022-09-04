@@ -16,7 +16,7 @@
 
         <createTable tableName="blank">
             <column name="blank_id" type="BIGINT" defaultValueSequenceNext="blank_id_seq">
-                <constraints primaryKey="true" primaryKeyName="blanks_pkey" nullable="false"/>
+                <constraints primaryKey="true" primaryKeyName="blank_pkey" nullable="false"/>
             </column>
             <column name="blank_name" type="VARCHAR(255)"/>
             <column name="blank_two_side" type="BOOLEAN"/>
@@ -24,7 +24,7 @@
                 <constraints foreignKeyName="blank_format_fkey" referencedColumnNames="formats_id"
                              referencedTableName="format"/>
             </column>
-            <column name="blank_surplus" type="BIGINT" defaultValue="0"/>
+            <column name="blank_orders_count" type="BIGINT" defaultValue="0"/>
         </createTable>
     </changeSet>
 </databaseChangeLog>

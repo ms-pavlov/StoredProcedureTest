@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="blanks_v6_order_list" author="ms-pavlov" context="test">
+        <createSequence cacheSize="371717"
+                        dataType="bigint"
+                        incrementBy="1"
+                        maxValue="9223372036854775807"
+                        minValue="1"
+                        schemaName="public"
+                        sequenceName="order_list_id_seq"
+                        startValue="1"/>
+
+        <createTable tableName="order_list">
+            <column name="order_list_id" type="BIGINT" defaultValueSequenceNext="order_list_id_seq">
+                <constraints primaryKey="true" primaryKeyName="order_list_pkey" nullable="false"/>
+            </column>
+            <column name="order_list_create_date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="order_list_contact_id" type="BIGINT">
+                <constraints foreignKeyName="order_list_contact_fkey" referencedColumnNames="contact_id"
+                             referencedTableName="contact"/>
+            </column>
+            <column name="order_list_is_complete" type="BOOLEAN" defaultValue="false"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

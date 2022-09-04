@@ -18,11 +18,7 @@ public class SequenceCurrentValueQueryBuilder extends AbstractQueryBuilder {
     }
 
     @Override
-    public PreparedStatement build(QueryParameters parameters) {
-        try (var statement = getConnection().prepareStatement(String.format(QUERY_TEMPLATE, getSqlObjectName()))){
-            return statement;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public PreparedStatement build(QueryParameters parameters) throws SQLException {
+            return getConnection().prepareStatement(String.format(QUERY_TEMPLATE, getSqlObjectName()));
     }
 }

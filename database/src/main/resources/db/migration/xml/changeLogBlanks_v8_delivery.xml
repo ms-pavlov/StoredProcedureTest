@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="blanks_v7_order" author="ms-pavlov" context="test">
+        <createSequence cacheSize="371717"
+                        dataType="bigint"
+                        incrementBy="1"
+                        maxValue="9223372036854775807"
+                        minValue="1"
+                        schemaName="public"
+                        sequenceName="delivery_id_seq"
+                        startValue="1"/>
+
+        <createTable tableName="delivery">
+            <column name="delivery_id" type="BIGINT" defaultValueSequenceNext="delivery_id_seq">
+                <constraints primaryKey="true" primaryKeyName="delivery_pkey" nullable="false"/>
+            </column>
+            <column name="delivery_create_date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="delivery_count" type="BIGINT"/>
+            <column name="delivery_order_position_id" type="BIGINT">
+                <constraints foreignKeyName="delivery_order_position_fkey" referencedColumnNames="order_position_id"
+                             referencedTableName="order_position"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

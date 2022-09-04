@@ -13,12 +13,12 @@ public class SimpleSelectQueryBuilder extends AbstractQueryBuilder {
 
     private static final String QUERY_TEMPLATE = "SELECT %s FROM %s";
 
-    public SimpleSelectQueryBuilder(Connection connection, String tableName, String queryTemplate) {
+    public SimpleSelectQueryBuilder(Connection connection, String tableName) {
         super(connection, tableName);
     }
 
     public static SimpleSelectQueryBuilder builder(Connection connection, String tableName) {
-        return new SimpleSelectQueryBuilder(connection, tableName, QUERY_TEMPLATE);
+        return new SimpleSelectQueryBuilder(connection, tableName);
     }
 
     @Override

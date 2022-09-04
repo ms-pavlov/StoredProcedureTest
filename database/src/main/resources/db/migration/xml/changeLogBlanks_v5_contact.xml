@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="blanks_v5_contact" author="ms-pavlov" context="test">
+        <createSequence cacheSize="371717"
+                        dataType="bigint"
+                        incrementBy="1"
+                        maxValue="9223372036854775807"
+                        minValue="1"
+                        schemaName="public"
+                        sequenceName="contact_id_seq"
+                        startValue="1"/>
+
+        <createTable tableName="contact">
+            <column name="contact_id" type="BIGINT" defaultValueSequenceNext="contact_id_seq">
+                <constraints primaryKey="true" primaryKeyName="contact_pkey" nullable="false"/>
+            </column>
+            <column name="contact_name" type="VARCHAR(255)"/>
+            <column name="contact_phone" type="VARCHAR(255)"/>
+            <column name="contact_department_id" type="BIGINT">
+                <constraints foreignKeyName="contacts_department_fkey" referencedColumnNames="department_id"
+                             referencedTableName="department"/>
+            </column>
+            <column name="contact_orders_count" type="BIGINT" defaultValue="0"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

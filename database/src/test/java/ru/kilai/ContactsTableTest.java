@@ -14,26 +14,25 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class BlanksTableTest {
-    private static final Map<String, Object> BLANK_INSERT_PARAMS = Map.of("blank_name", "Опросный лист",
-            "blank_two_side", true);
-    private static final List<String> BLANK_SELECT_PARAMS = List.of("blank_id", "blank_name", "blank_two_side",
-            "blank_format_id", "blank_orders_count");
-
+public class ContactsTableTest {
+    private static final Map<String, Object> CONTACTS_INSERT_PARAMS = Map.of("contact_name", "Менеджер",
+            "contact_phone", "5223232");
+    private static final List<String> CONTACTS_SELECT_PARAMS = List.of("contact_id", "contact_name", "contact_phone",
+            "contact_department_id", "contact_orders_count");
 
     @Test
-    void changeLogBlanks() {
+    void changeLogContacts() {
         try (var connection = PostgresConnectionPool.getConnection()) {
             LiquibaseTestMaker.builder("classpath:/db/migration/master.xml", connection)
                     .makeTestsAndRollback(
                             InsertAndSelectLiquibaseTestBuilder.builder(connection)
-                                    .sqlObjectName("blank")
-                                    .insertParameters(BLANK_INSERT_PARAMS)
-                                    .selectParameters(BLANK_SELECT_PARAMS)
+                                    .sqlObjectName("contact")
+                                    .insertParameters(CONTACTS_INSERT_PARAMS)
+                                    .selectParameters(CONTACTS_SELECT_PARAMS)
                                     .test(this::checks)
                                     .build(),
                             SequenceCurrentValueTestBuilder.builder(connection)
-                                    .sqlObjectName("blank_id_seq")
+                                    .sqlObjectName("contact_id_seq")
                                     .build()
                     );
         } catch (SQLException e) {
@@ -43,8 +42,8 @@ public class BlanksTableTest {
 
     private void checks(ResultSet result) {
         try {
-            assertNotNull(result.getObject("blank_id"));
-            assertEquals(0L, result.getObject("blank_orders_count"));
+            assertNotNull(result.getObject("contact_id"));
+            assertEquals(0L, result.getObject("contact_orders_count"));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

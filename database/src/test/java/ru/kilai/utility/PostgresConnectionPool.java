@@ -1,4 +1,4 @@
-package ru.kilai;
+package ru.kilai.utility;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -21,10 +21,6 @@ public class PostgresConnectionPool {
             postgresSQLContainer.start();
         }
         return postgresSQLContainer;
-    }
-
-    public static DataSource getDataSource() {
-        return dataSourcePool;
     }
 
     public static Connection getConnection() {
