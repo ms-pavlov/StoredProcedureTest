@@ -5,6 +5,7 @@ import ru.kilai.parameters.QueryParameters;
 import ru.kilai.query.SimpleSelectQueryBuilder;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
@@ -54,21 +55,20 @@ public class SelectLiquibaseTestBuilder implements LiquibaseTestBuilder{
     public LiquibaseTest build() {
         try {
             var statement = SimpleSelectQueryBuilder.builder(connection, sqlObjectName).build(parameters);
-            return new SimpleLiquibaseTest(statement, preparedStatement -> {
-                try(var result = executor(statement).executeAndGetResult()) {
-                    result.next();
-                    for (String key : expectParameters.keySet()) {
-                        assertEquals(expectParameters.get(key), result.getObject(key));
-                    }
+            return new SimpleLiquibaseTest(statement, this::makeSelectTest);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-                    test.accept(result);
+    private void makeSelectTest(PreparedStatement statement) {
+        try(var result = executor(statement).executeAndGetResult()) {
+            result.next();
+            for (String key : expectParameters.keySet()) {
+                assertEquals(expectParameters.get(key), result.getObject(key));
+            }
 
-                    result.next();
-                    assertThrows(PSQLException.class, () -> result.getObject(1));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+            test.accept(result);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

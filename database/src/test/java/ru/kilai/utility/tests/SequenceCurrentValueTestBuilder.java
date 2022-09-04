@@ -3,6 +3,7 @@ package ru.kilai.utility.tests;
 import ru.kilai.query.SequenceCurrentValueQueryBuilder;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -30,15 +31,16 @@ public class SequenceCurrentValueTestBuilder implements LiquibaseTestBuilder {
     public LiquibaseTest build() {
         try {
             var statement = SequenceCurrentValueQueryBuilder.builder(connection, sqlObjectName).build(null);
-            return new SimpleLiquibaseTest(statement,
-                    preparedStatement -> {
-                        try(var result = executor(statement).executeAndGetResult()) {
-                            result.next();
-                            assertEquals(1, result.getMetaData().getColumnCount());
-                        } catch (SQLException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
+            return new SimpleLiquibaseTest(statement, this::makeSequenceTest);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void makeSequenceTest(PreparedStatement statement) {
+        try(var result = executor(statement).executeAndGetResult()) {
+            result.next();
+            assertEquals(1, result.getMetaData().getColumnCount());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

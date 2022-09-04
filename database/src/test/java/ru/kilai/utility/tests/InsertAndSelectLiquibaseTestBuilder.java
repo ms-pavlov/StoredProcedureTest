@@ -1,12 +1,16 @@
 package ru.kilai.utility.tests;
 
+import org.postgresql.util.PSQLException;
 import ru.kilai.parameters.SimpleQueryParameters;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class InsertAndSelectLiquibaseTestBuilder implements LiquibaseTestBuilder{
     private final Connection connection;
@@ -55,7 +59,15 @@ public class InsertAndSelectLiquibaseTestBuilder implements LiquibaseTestBuilder
                     .sqlObjectName(sqlObjectName)
                     .parameters(new SimpleQueryParameters(selectParameters))
                     .expectParameters(insertParameters)
-                    .test(test)
+                    .test(resultSet -> {
+                        try {
+                            test.accept(resultSet);
+                            resultSet.next();
+                            assertThrows(PSQLException.class, () -> resultSet.getObject(1));
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
+                    })
                     .build()
                     .makeTest();
         };
