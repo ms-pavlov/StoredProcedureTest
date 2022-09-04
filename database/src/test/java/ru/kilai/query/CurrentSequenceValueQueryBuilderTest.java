@@ -27,10 +27,10 @@ class CurrentSequenceValueQueryBuilderTest {
         assertFalse(statement.isClosed());
     }
 
-    private PreparedStatement prepStatement(Connection connection) throws SQLException {
+    private PreparedStatement prepStatement(Connection connection) {
         return SequenceCurrentValueQueryBuilder
                 .builder(connection, "formats_id_seq")
-                .build(null);
+                .build();
     }
 
 }

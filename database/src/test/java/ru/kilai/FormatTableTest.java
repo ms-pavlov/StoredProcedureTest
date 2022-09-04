@@ -23,8 +23,7 @@ public class FormatTableTest {
             LiquibaseTestMaker.prepareMaker("classpath:/db/migration/master.xml", connection)
                     .addContext("main")
                     .makeTestsWithRollback(
-                            InsertAndSelectLiquibaseTestBuilder.builder(connection)
-                                    .sqlObjectName("format")
+                            InsertAndSelectLiquibaseTestBuilder.builder(connection, "format")
                                     .insertParameters(FORMAT_INSERT_PARAMS)
                                     .selectParameters(FORMAT_SELECT_PARAMS)
                                     .test(this::checkID)

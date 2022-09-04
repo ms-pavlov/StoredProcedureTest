@@ -1,6 +1,5 @@
 package ru.kilai.utility.tests;
 
-import org.postgresql.util.PSQLException;
 import ru.kilai.parameters.QueryParameters;
 import ru.kilai.query.SimpleSelectQueryBuilder;
 
@@ -53,12 +52,8 @@ public class SelectLiquibaseTestBuilder implements LiquibaseTestBuilder{
 
     @Override
     public LiquibaseTest build() {
-        try {
-            var statement = SimpleSelectQueryBuilder.builder(connection, sqlObjectName).build(parameters);
-            return new SimpleLiquibaseTest(statement, this::makeSelectTest);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        var statement = SimpleSelectQueryBuilder.builder(connection, sqlObjectName, parameters).build();
+        return new SimpleLiquibaseTest(statement, this::makeSelectTest);
     }
 
     private void makeSelectTest(PreparedStatement statement) {

@@ -32,20 +32,6 @@ public class SimpleQueryParameters implements QueryParameters {
         });
     }
 
-    @Override
-    public void put(String field, Object value) {
-        if (null != field) {
-            fields.add(field);
-            values.add(value);
-        } else {
-            throw new QueryParametersException();
-        }
-    }
-
-    @Override
-    public void put(String fields) {
-        put(fields, null);
-    }
 
     @Override
     public String getFieldsNames() {

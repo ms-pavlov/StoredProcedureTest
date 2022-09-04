@@ -29,12 +29,8 @@ public class SequenceCurrentValueTestBuilder implements LiquibaseTestBuilder {
 
     @Override
     public LiquibaseTest build() {
-        try {
-            var statement = SequenceCurrentValueQueryBuilder.builder(connection, sqlObjectName).build(null);
-            return new SimpleLiquibaseTest(statement, this::makeSequenceTest);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        var statement = SequenceCurrentValueQueryBuilder.builder(connection, sqlObjectName).build();
+        return new SimpleLiquibaseTest(statement, this::makeSequenceTest);
     }
 
     private void makeSequenceTest(PreparedStatement statement) {

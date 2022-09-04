@@ -24,8 +24,7 @@ public class BuildingTableTest {
             LiquibaseTestMaker.prepareMaker("classpath:/db/migration/master.xml", connection)
                     .addContext("main")
                     .makeTestsWithRollback(
-                            InsertAndSelectLiquibaseTestBuilder.builder(connection)
-                                    .sqlObjectName("building")
+                            InsertAndSelectLiquibaseTestBuilder.builder(connection, "building")
                                     .insertParameters(BUILDING_INSERT_PARAMS)
                                     .selectParameters(BUILDING_SELECT_PARAMS)
                                     .test(this::checkID)

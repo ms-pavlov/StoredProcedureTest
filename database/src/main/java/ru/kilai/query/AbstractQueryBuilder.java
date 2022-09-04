@@ -1,25 +1,22 @@
 package ru.kilai.query;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
-public abstract class AbstractQueryBuilder implements QueryBuilder {
-
+public abstract class AbstractQueryBuilder implements QueryBuilder{
     private final Connection connection;
-    private final String sqlObjectName;
 
-    public AbstractQueryBuilder(Connection connection, String sqlObjectName) {
+    public AbstractQueryBuilder(Connection connection) {
         this.connection = connection;
-        this.sqlObjectName = sqlObjectName;
     }
 
     @Override
-    public Connection getConnection() {
-        return connection;
+    public PreparedStatement prepareStatement(String sql) {
+        try {
+            return connection.prepareStatement(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
-
-    @Override
-    public String getSqlObjectName() {
-        return sqlObjectName;
-    }
-
 }

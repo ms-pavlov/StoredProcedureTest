@@ -29,8 +29,7 @@ public class OrderTableTest {
             LiquibaseTestMaker.prepareMaker("classpath:/db/migration/master.xml", connection)
                     .addContext("main")
                     .makeTestsWithRollback(
-                            InsertAndSelectLiquibaseTestBuilder.builder(connection)
-                                    .sqlObjectName("order_position")
+                            InsertAndSelectLiquibaseTestBuilder.builder(connection, "order_position")
                                     .insertParameters(ORDER_INSERT_PARAMS)
                                     .selectParameters(ORDER_SELECT_PARAMS)
                                     .test(this::checks)

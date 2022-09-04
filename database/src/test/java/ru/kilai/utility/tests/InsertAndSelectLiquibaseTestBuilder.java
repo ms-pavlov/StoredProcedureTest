@@ -14,17 +14,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class InsertAndSelectLiquibaseTestBuilder implements LiquibaseTestBuilder{
     private final Connection connection;
-    private String sqlObjectName;
+    private final String sqlObjectName;
     private List<String> selectParameters;
     private Map<String, Object> insertParameters;
     private Consumer<ResultSet> test;
 
-    private InsertAndSelectLiquibaseTestBuilder(Connection connection) {
+    private InsertAndSelectLiquibaseTestBuilder(Connection connection, String sqlObjectName) {
         this.connection = connection;
+        this.sqlObjectName = sqlObjectName;
     }
 
-    public static InsertAndSelectLiquibaseTestBuilder builder(Connection connection) {
-        return new InsertAndSelectLiquibaseTestBuilder(connection);
+    public static InsertAndSelectLiquibaseTestBuilder builder(Connection connection, String sqlObjectName) {
+        return new InsertAndSelectLiquibaseTestBuilder(connection, sqlObjectName);
     }
 
     public InsertAndSelectLiquibaseTestBuilder selectParameters(List<String> selectParameters) {
@@ -34,11 +35,6 @@ public class InsertAndSelectLiquibaseTestBuilder implements LiquibaseTestBuilder
 
     public InsertAndSelectLiquibaseTestBuilder insertParameters(Map<String, Object> insertParameters) {
         this.insertParameters = insertParameters;
-        return this;
-    }
-
-    public InsertAndSelectLiquibaseTestBuilder sqlObjectName(String sqlObjectName) {
-        this.sqlObjectName = sqlObjectName;
         return this;
     }
 

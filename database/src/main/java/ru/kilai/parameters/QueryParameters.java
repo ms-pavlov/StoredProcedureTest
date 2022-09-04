@@ -2,11 +2,9 @@ package ru.kilai.parameters;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Map;
 
 public interface QueryParameters {
-    void put(String field, Object value);
-
-    void put(String fields);
 
     String getFieldsNames();
 

@@ -26,8 +26,7 @@ public class ContactsTableTest {
             LiquibaseTestMaker.prepareMaker("classpath:/db/migration/master.xml", connection)
                     .addContext("main")
                     .makeTestsWithRollback(
-                            InsertAndSelectLiquibaseTestBuilder.builder(connection)
-                                    .sqlObjectName("contact")
+                            InsertAndSelectLiquibaseTestBuilder.builder(connection, "contact")
                                     .insertParameters(CONTACTS_INSERT_PARAMS)
                                     .selectParameters(CONTACTS_SELECT_PARAMS)
                                     .test(this::checks)

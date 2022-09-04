@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,20 +15,11 @@ class SimpleQueryParametersTest {
     private static final Map<String, Object> TEST_PARAMETERS = Map.of("field", "value");
 
     @Test
-    void put() {
-        var parameters = new SimpleQueryParameters();
-        assertThrows(QueryParametersException.class, () -> parameters.put(null));
-        assertThrows(QueryParametersException.class, () -> parameters.put(null, null));
-        assertDoesNotThrow(() -> parameters.put("field2", null));
-        assertDoesNotThrow(() -> parameters.put("field2"));
-    }
-
-    @Test
     void getFieldsNames() {
         var parameters = new SimpleQueryParameters(TEST_PARAMETERS);
         assertEquals("field", parameters.getFieldsNames());
-        parameters.put("field2");
 
+        parameters = new SimpleQueryParameters(List.of("field", "field2"));
         assertEquals("field, field2", parameters.getFieldsNames());
 
     }
@@ -36,8 +28,7 @@ class SimpleQueryParametersTest {
     void getParametersMask() {
         var parameters = new SimpleQueryParameters(TEST_PARAMETERS);
         assertEquals("?", parameters.getParametersMask());
-        parameters.put("field2");
-
+        parameters = new SimpleQueryParameters(List.of("field", "field2"));
         assertEquals("?, ?", parameters.getParametersMask());
     }
 

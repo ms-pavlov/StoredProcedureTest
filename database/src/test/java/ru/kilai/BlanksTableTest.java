@@ -27,8 +27,7 @@ public class BlanksTableTest {
             LiquibaseTestMaker.prepareMaker("classpath:/db/migration/master.xml", connection)
                     .addContext("main")
                     .makeTestsWithRollback(
-                            InsertAndSelectLiquibaseTestBuilder.builder(connection)
-                                    .sqlObjectName("blank")
+                            InsertAndSelectLiquibaseTestBuilder.builder(connection, "blank")
                                     .insertParameters(BLANK_INSERT_PARAMS)
                                     .selectParameters(BLANK_SELECT_PARAMS)
                                     .test(this::checks)

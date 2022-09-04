@@ -26,8 +26,7 @@ public class OrderListTableTest {
             LiquibaseTestMaker.prepareMaker("classpath:/db/migration/master.xml", connection)
                     .addContext("main")
                     .makeTestsWithRollback(
-                            InsertAndSelectLiquibaseTestBuilder.builder(connection)
-                                    .sqlObjectName("order_list")
+                            InsertAndSelectLiquibaseTestBuilder.builder(connection, "order_list")
                                     .insertParameters(Map.of("order_list_create_date", new Timestamp(new Date().getTime())))
                                     .selectParameters(ORDER_LIST_SELECT_PARAMS)
                                     .test(this::checks)

@@ -28,8 +28,7 @@ public class DeliveryTableTest {
             LiquibaseTestMaker.prepareMaker("classpath:/db/migration/master.xml", connection)
                     .addContext("main")
                     .makeTestsWithRollback(
-                            InsertAndSelectLiquibaseTestBuilder.builder(connection)
-                                    .sqlObjectName("delivery")
+                            InsertAndSelectLiquibaseTestBuilder.builder(connection, "delivery")
                                     .insertParameters(ORDER_INSERT_PARAMS)
                                     .selectParameters(ORDER_SELECT_PARAMS)
                                     .test(this::checks)

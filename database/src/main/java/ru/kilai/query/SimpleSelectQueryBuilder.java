@@ -6,24 +6,30 @@ import ru.kilai.parameters.QueryParameters;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 public class SimpleSelectQueryBuilder extends AbstractQueryBuilder {
     private static final Logger log = LoggerFactory.getLogger(SimpleSelectQueryBuilder.class);
 
     private static final String QUERY_TEMPLATE = "SELECT %s FROM %s";
 
-    public SimpleSelectQueryBuilder(Connection connection, String tableName) {
-        super(connection, tableName);
+    private final QueryParameters parameters;
+    private final String sqlObjectName;
+    public SimpleSelectQueryBuilder(Connection connection, String sqlObjectName, QueryParameters parameters) {
+        super(connection);
+        this.parameters = parameters;
+        this.sqlObjectName = sqlObjectName;
     }
 
-    public static SimpleSelectQueryBuilder builder(Connection connection, String tableName) {
-        return new SimpleSelectQueryBuilder(connection, tableName);
+    public static SimpleSelectQueryBuilder builder(Connection connection, String sqlObjectName, QueryParameters parameters) {
+        return new SimpleSelectQueryBuilder(connection, sqlObjectName, parameters);
+    }
+
+    private String getQuerySql() {
+        return String.format(QUERY_TEMPLATE, parameters.getFieldsNames(), sqlObjectName);
     }
 
     @Override
-    public PreparedStatement build(QueryParameters parameters) throws SQLException {
-        var sql = String.format(QUERY_TEMPLATE, parameters.getFieldsNames(), getSqlObjectName());
-        return getConnection().prepareStatement(sql);
+    public PreparedStatement build() {
+        return prepareStatement(getQuerySql());
     }
 }

@@ -37,8 +37,8 @@ class InsertQueryBuilderTest {
         assertFalse(statement.isClosed());
     }
 
-    private PreparedStatement getPreparedStatement(Connection connection) throws SQLException {
-        return InsertQueryBuilder.builder(connection, "formats")
-                .build(new SimpleQueryParameters(FORMAT_INSERT_PARAMS));
+    private PreparedStatement getPreparedStatement(Connection connection) {
+        return InsertQueryBuilder.builder(connection, "formats", new SimpleQueryParameters(FORMAT_INSERT_PARAMS))
+                .build();
     }
 }

@@ -4,7 +4,6 @@ import ru.kilai.parameters.QueryParameters;
 import ru.kilai.query.InsertQueryBuilder;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ru.kilai.query.SimpleJDBCQueryExecutor.executor;
@@ -34,11 +33,7 @@ public class InsertLiquibaseTestBuilder implements LiquibaseTestBuilder {
 
     @Override
     public LiquibaseTest build() {
-        try {
-            var statement = InsertQueryBuilder.builder(connection, sqlObjectName).build(parameters);
-            return new SimpleLiquibaseTest(statement, preparedStatement -> assertEquals(1, executor(statement).executeUpdate()));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        var statement = InsertQueryBuilder.builder(connection, sqlObjectName, parameters).build();
+        return new SimpleLiquibaseTest(statement, preparedStatement -> assertEquals(1, executor(statement).executeUpdate()));
     }
 }

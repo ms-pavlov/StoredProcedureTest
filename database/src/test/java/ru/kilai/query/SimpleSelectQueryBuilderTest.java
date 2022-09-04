@@ -34,8 +34,8 @@ class SimpleSelectQueryBuilderTest {
         assertFalse(statement.isClosed());
     }
 
-    private PreparedStatement prepStatement(Connection connection) throws SQLException {
-        return SimpleSelectQueryBuilder.builder(connection, "formats")
-                .build(new SimpleQueryParameters(FORMAT_SELECT_PARAMS));
+    private PreparedStatement prepStatement(Connection connection) {
+        return SimpleSelectQueryBuilder.builder(connection, "formats", new SimpleQueryParameters(FORMAT_SELECT_PARAMS))
+                .build();
     }
 }
