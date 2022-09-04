@@ -26,8 +26,9 @@ public class OrderTableTest {
     @Test
     void changeLogContacts() {
         try (var connection = PostgresConnectionPool.getConnection()) {
-            LiquibaseTestMaker.builder("classpath:/db/migration/master.xml", connection)
-                    .makeTestsAndRollback(
+            LiquibaseTestMaker.prepareMaker("classpath:/db/migration/master.xml", connection)
+                    .addContext("main")
+                    .makeTestsWithRollback(
                             InsertAndSelectLiquibaseTestBuilder.builder(connection)
                                     .sqlObjectName("order_position")
                                     .insertParameters(ORDER_INSERT_PARAMS)

@@ -1,5 +1,6 @@
 package ru.kilai.utility;
 
+import liquibase.Contexts;
 import liquibase.Liquibase;
 import liquibase.Scope;
 import liquibase.database.DatabaseFactory;
@@ -20,25 +21,34 @@ public class LiquibaseTestMaker {
     private static final Logger log = LoggerFactory.getLogger(LiquibaseTestMaker.class);
     private final String changeLofFile;
     private final Connection connection;
+    private final Contexts contexts;
+
 
     private LiquibaseTestMaker(String changeLofFile, Connection connection) {
         this.changeLofFile = changeLofFile;
         this.connection = connection;
+        contexts = new Contexts();
     }
 
-    public static LiquibaseTestMaker builder(String changeLofFile, Connection connection) {
+    public static LiquibaseTestMaker prepareMaker(String changeLofFile, Connection connection) {
         return new LiquibaseTestMaker(changeLofFile, connection);
     }
 
-    public void makeTestsAndRollback(LiquibaseTest... tests) {
+    public LiquibaseTestMaker addContext(String context) {
+        contexts.add(context);
+        return this;
+    }
+
+    public void makeTestsWithRollback(LiquibaseTest... tests) {
         try {
             Scope.child(getDefaultConfig(), () -> {
                 try (Liquibase liquibase = prepLiquibase(new JdbcConnection(connection))) {
                     liquibase.tag("beginTest");
-                    liquibase.update("test");
+                    liquibase.update(contexts);
+
                     log.debug("Start tests ...");
                     Stream.of(tests).forEach(LiquibaseTest::makeTest);
-                    liquibase.rollback("beginTest", "test");
+                    liquibase.rollback("beginTest", contexts);
                     connection.rollback();
                 }
             });

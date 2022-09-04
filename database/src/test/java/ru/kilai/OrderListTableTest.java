@@ -23,8 +23,9 @@ public class OrderListTableTest {
     @Test
     void changeLogContacts() {
         try (var connection = PostgresConnectionPool.getConnection()) {
-            LiquibaseTestMaker.builder("classpath:/db/migration/master.xml", connection)
-                    .makeTestsAndRollback(
+            LiquibaseTestMaker.prepareMaker("classpath:/db/migration/master.xml", connection)
+                    .addContext("main")
+                    .makeTestsWithRollback(
                             InsertAndSelectLiquibaseTestBuilder.builder(connection)
                                     .sqlObjectName("order_list")
                                     .insertParameters(Map.of("order_list_create_date", new Timestamp(new Date().getTime())))

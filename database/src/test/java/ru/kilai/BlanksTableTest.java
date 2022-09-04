@@ -24,8 +24,9 @@ public class BlanksTableTest {
     @Test
     void changeLogBlanks() {
         try (var connection = PostgresConnectionPool.getConnection()) {
-            LiquibaseTestMaker.builder("classpath:/db/migration/master.xml", connection)
-                    .makeTestsAndRollback(
+            LiquibaseTestMaker.prepareMaker("classpath:/db/migration/master.xml", connection)
+                    .addContext("main")
+                    .makeTestsWithRollback(
                             InsertAndSelectLiquibaseTestBuilder.builder(connection)
                                     .sqlObjectName("blank")
                                     .insertParameters(BLANK_INSERT_PARAMS)

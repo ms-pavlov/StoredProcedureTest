@@ -20,8 +20,9 @@ public class FormatTableTest {
     @Test
     void changeLogFormats() {
         try (var connection = PostgresConnectionPool.getConnection()) {
-            LiquibaseTestMaker.builder("classpath:/db/migration/master.xml", connection)
-                    .makeTestsAndRollback(
+            LiquibaseTestMaker.prepareMaker("classpath:/db/migration/master.xml", connection)
+                    .addContext("main")
+                    .makeTestsWithRollback(
                             InsertAndSelectLiquibaseTestBuilder.builder(connection)
                                     .sqlObjectName("format")
                                     .insertParameters(FORMAT_INSERT_PARAMS)
