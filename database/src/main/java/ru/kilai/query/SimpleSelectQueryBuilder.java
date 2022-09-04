@@ -8,17 +8,17 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class SelectQueryBuilder extends AbstractQueryBuilder {
-    private static final Logger log = LoggerFactory.getLogger(SelectQueryBuilder.class);
+public class SimpleSelectQueryBuilder extends AbstractQueryBuilder {
+    private static final Logger log = LoggerFactory.getLogger(SimpleSelectQueryBuilder.class);
 
     private static final String QUERY_TEMPLATE = "SELECT %s FROM %s";
 
-    public SelectQueryBuilder(Connection connection, String tableName, String queryTemplate) {
+    public SimpleSelectQueryBuilder(Connection connection, String tableName, String queryTemplate) {
         super(connection, tableName);
     }
 
-    public static SelectQueryBuilder builder(Connection connection, String tableName) {
-        return new SelectQueryBuilder(connection, tableName, QUERY_TEMPLATE);
+    public static SimpleSelectQueryBuilder builder(Connection connection, String tableName) {
+        return new SimpleSelectQueryBuilder(connection, tableName, QUERY_TEMPLATE);
     }
 
     @Override
