@@ -12,7 +12,7 @@ class CurrentSequenceValueQueryBuilderTest {
     @Test
     void build() throws SQLException {
         var connection = mock(Connection.class);
-        try (var statement = SequenceCurrentValueQueryBuilder
+        try (var ignored = SequenceCurrentValueQueryBuilder
                 .builder(connection, "formats_id_seq")
                 .build(null)) {
             verify(connection, times(1)).prepareStatement("SELECT CURRVAL('formats_id_seq')");
