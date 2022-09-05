@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="blanks_v07_order" author="ms-pavlov" context="main">
+        <createSequence cacheSize="371717"
+                        dataType="bigint"
+                        incrementBy="1"
+                        maxValue="9223372036854775807"
+                        minValue="1"
+                        schemaName="public"
+                        sequenceName="order_id_seq"
+                        startValue="1"/>
+
+        <createTable tableName="order_position">
+            <column name="order_position_id" type="BIGINT" defaultValueSequenceNext="order_id_seq">
+                <constraints primaryKey="true" primaryKeyName="order_pkey" nullable="false"/>
+            </column>
+            <column name="order_position_plan_date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="order_position_count" type="BIGINT"/>
+            <column name="order_position_ready" type="BIGINT" defaultValue="0"/>
+            <column name="order_position_is_complete" type="BOOLEAN" defaultValue="false"/>
+            <column name="order_position_blank_id" type="BIGINT">
+                <constraints foreignKeyName="order_position_blank_fkey" referencedColumnNames="blank_id"
+                             referencedTableName="blank"/>
+            </column>
+            <column name="order_position_order_list_id" type="BIGINT">
+                <constraints foreignKeyName="order_position_order_list_fkey" referencedColumnNames="order_list_id"
+                             referencedTableName="order_list"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

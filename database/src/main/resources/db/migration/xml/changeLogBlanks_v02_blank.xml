@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="blanks_v02_blank" author="ms-pavlov" context="main">
+        <createSequence cacheSize="371717"
+                        dataType="bigint"
+                        incrementBy="1"
+                        maxValue="9223372036854775807"
+                        minValue="1"
+                        schemaName="public"
+                        sequenceName="blank_id_seq"
+                        startValue="1"/>
+
+        <createTable tableName="blank">
+            <column name="blank_id" type="BIGINT" defaultValueSequenceNext="blank_id_seq">
+                <constraints primaryKey="true" primaryKeyName="blank_pkey" nullable="false"/>
+            </column>
+            <column name="blank_name" type="VARCHAR(255)"/>
+            <column name="blank_two_side" type="BOOLEAN"/>
+            <column name="blank_format_id" type="BIGINT">
+                <constraints foreignKeyName="blank_format_fkey" referencedColumnNames="formats_id"
+                             referencedTableName="format"/>
+            </column>
+            <column name="blank_orders_count" type="BIGINT" defaultValue="0"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

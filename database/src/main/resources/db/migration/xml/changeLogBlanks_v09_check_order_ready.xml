@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="blanks_v09_check_order_ready" author="ms-pavlov" context="main">
+        <createProcedure dbms="postgresql"
+                         encoding="UTF-8"
+                         procedureName="check_order_ready"
+                         relativeToChangelogFile="true"
+                         schemaName="public">
+            CREATE OR REPLACE PROCEDURE check_order_ready(order_id BIGINT)
+            LANGUAGE plpgsql
+            AS $BODY$
+            DECLARE
+                delivery_sum BIGINT;
+                next_id BIGINT;
+                ready BOOLEAN;
+            BEGIN
+                SELECT SUM(d.delivery_count) INTO STRICT delivery_sum
+                FROM delivery d
+                WHERE delivery_order_position_id = order_id;
+
+                UPDATE order_position
+                SET order_position_is_complete = 1 > (order_position_count - delivery_sum)
+                WHERE order_position_id = order_id;
+
+                SELECT order_position_order_list_id INTO STRICT next_id
+                FROM order_position
+                WHERE order_position_id = order_id
+                LIMIT 1;
+
+                SELECT BOOL_AND(order_position_is_complete) INTO STRICT ready
+                FROM order_position
+                WHERE order_position_order_list_id = next_id;
+
+                UPDATE order_list
+                SET order_list_is_complete = ready
+                WHERE order_list_id = next_id;
+
+            RETURN;
+            END;
+            $BODY$;
+        </createProcedure>
+        <rollback>
+            DROP PROCEDURE check_order_ready;
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="blanks_v11_cancel_delivery" author="ms-pavlov" context="main">
+        <createProcedure dbms="postgresql"
+                         encoding="UTF-8"
+                         procedureName="make_delivery"
+                         relativeToChangelogFile="true"
+                         schemaName="public">
+            CREATE OR REPLACE PROCEDURE cancel_delivery(id BIGINT)
+            LANGUAGE plpgsql
+            AS $BODY$
+            DECLARE
+                order_id BIGINT;
+            BEGIN
+                SELECT delivery_order_position_id INTO STRICT order_id
+                FROM delivery
+                WHERE delivery_id = id
+                LIMIT 1;
+
+                DELETE FROM delivery
+                WHERE delivery_id = id;
+
+                CALL check_order_ready(order_id);
+
+                RETURN;
+            END;
+            $BODY$;
+        </createProcedure>
+        <rollback>
+            DROP PROCEDURE cancel_delivery;
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,28 @@
+plugins {
+    id 'java'
+    id 'org.liquibase.gradle'
+}
+
+group 'ru.kilai'
+version 'unspecified'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation('com.zaxxer:HikariCP')
+    implementation('org.postgresql:postgresql')
+    implementation('ch.qos.logback:logback-classic')
+
+    testImplementation('org.liquibase:liquibase-core')
+    testImplementation('org.testcontainers:junit-jupiter')
+    testImplementation('org.testcontainers:postgresql')
+    testImplementation('org.junit.jupiter:junit-jupiter-api')
+    testImplementation("org.mockito:mockito-junit-jupiter")
+    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine')
+}
+
+test {
+    useJUnitPlatform()
+}

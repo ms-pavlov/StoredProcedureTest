@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="blanks_v09.1_make_delivery_test_set" author="ms-pavlov" context="test">
+        <insert tableName="order_list">
+            <column  name="order_list_id"  value="1"/>
+        </insert>
+        <insert tableName="order_position">
+            <column  name="order_position_id"  value="1"/>
+            <column  name="order_position_count"  value="100"/>
+            <column  name="order_position_ready"  value="50"/>
+            <column  name="order_position_order_list_id"  value="1"/>
+        </insert>
+        <rollback>
+            DELETE FROM order_position WHERE order_position_id = 1;
+            DELETE FROM order_list WHERE order_list_id = 1;
+        </rollback>
+    </changeSet>
+</databaseChangeLog>
