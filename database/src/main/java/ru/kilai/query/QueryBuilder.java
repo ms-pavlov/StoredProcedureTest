@@ -4,7 +4,7 @@ import java.sql.PreparedStatement;
 
 public interface QueryBuilder {
 
-    PreparedStatement build();
+    PreparedStatement buildQuery();
 
     PreparedStatement prepareStatement(String queryTemplate);
 }

@@ -1,6 +1,7 @@
-package ru.kilai.parameters;
+package ru.kilai.query.parameters;
 
 import org.junit.jupiter.api.Test;
+import ru.kilai.query.parameters.SimpleQueryParameters;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

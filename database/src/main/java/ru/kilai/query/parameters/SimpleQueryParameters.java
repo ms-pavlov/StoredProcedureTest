@@ -1,4 +1,4 @@
-package ru.kilai.parameters;
+package ru.kilai.query.parameters;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

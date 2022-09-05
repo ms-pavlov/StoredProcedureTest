@@ -1,4 +1,4 @@
-package ru.kilai.query;
+package ru.kilai.query.executor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

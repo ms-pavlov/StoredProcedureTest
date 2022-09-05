@@ -1,7 +1,7 @@
 package ru.kilai.utility.tests;
 
 import org.postgresql.util.PSQLException;
-import ru.kilai.parameters.SimpleQueryParameters;
+import ru.kilai.query.parameters.SimpleQueryParameters;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

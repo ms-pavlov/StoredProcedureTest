@@ -1,12 +1,12 @@
 package ru.kilai.utility.tests;
 
-import ru.kilai.parameters.QueryParameters;
+import ru.kilai.query.parameters.QueryParameters;
 import ru.kilai.query.InsertQueryBuilder;
 
 import java.sql.Connection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ru.kilai.query.SimpleJDBCQueryExecutor.executor;
+import static ru.kilai.query.executor.SimpleJDBCQueryExecutor.executor;
 
 public class InsertLiquibaseTestBuilder implements LiquibaseTestBuilder {
     private final Connection connection;
@@ -31,7 +31,7 @@ public class InsertLiquibaseTestBuilder implements LiquibaseTestBuilder {
 
     @Override
     public LiquibaseTest build() {
-        var statement = InsertQueryBuilder.builder(connection, parameters).build();
+        var statement = InsertQueryBuilder.builder(connection, parameters).buildQuery();
         return new SimpleLiquibaseTest(statement, preparedStatement -> assertEquals(1, executor(statement).executeUpdate()));
     }
 }
