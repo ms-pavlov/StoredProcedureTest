@@ -1,4 +1,4 @@
-package ru.kilai.query;
+package ru.kilai.query.executor;
 
 import java.sql.ResultSet;
 

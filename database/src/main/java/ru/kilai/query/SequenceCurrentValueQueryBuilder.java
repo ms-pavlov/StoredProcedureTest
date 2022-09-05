@@ -22,7 +22,7 @@ public class SequenceCurrentValueQueryBuilder extends AbstractQueryBuilder {
     }
 
     @Override
-    public PreparedStatement build() {
+    public PreparedStatement buildQuery() {
         return prepareStatement(getQuerySql());
     }
 }

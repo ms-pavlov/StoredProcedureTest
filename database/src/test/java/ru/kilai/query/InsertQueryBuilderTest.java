@@ -1,8 +1,8 @@
 package ru.kilai.query;
 
 import org.junit.jupiter.api.Test;
-import ru.kilai.parameters.QueryParameters;
-import ru.kilai.parameters.SimpleQueryParameters;
+import ru.kilai.query.parameters.QueryParameters;
+import ru.kilai.query.parameters.SimpleQueryParameters;
 import ru.kilai.utility.PostgresConnectionPool;
 
 import java.sql.Connection;
@@ -40,6 +40,6 @@ class InsertQueryBuilderTest {
 
     private PreparedStatement getPreparedStatement(Connection connection) {
         return InsertQueryBuilder.builder(connection, FORMAT_INSERT_PARAMS)
-                .build();
+                .buildQuery();
     }
 }

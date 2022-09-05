@@ -1,8 +1,8 @@
 package ru.kilai.query;
 
 import org.junit.jupiter.api.Test;
-import ru.kilai.parameters.QueryParameters;
-import ru.kilai.parameters.SimpleQueryParameters;
+import ru.kilai.query.parameters.QueryParameters;
+import ru.kilai.query.parameters.SimpleQueryParameters;
 import ru.kilai.utility.PostgresConnectionPool;
 
 import java.sql.Connection;
@@ -37,6 +37,6 @@ class SimpleSelectQueryBuilderTest {
 
     private PreparedStatement prepStatement(Connection connection) {
         return SimpleSelectQueryBuilder.builder(connection, FORMAT_SELECT_PARAMS)
-                .build();
+                .buildQuery();
     }
 }

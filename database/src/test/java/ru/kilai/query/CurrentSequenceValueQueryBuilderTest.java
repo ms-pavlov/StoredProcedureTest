@@ -30,7 +30,7 @@ class CurrentSequenceValueQueryBuilderTest {
     private PreparedStatement prepStatement(Connection connection) {
         return SequenceCurrentValueQueryBuilder
                 .builder(connection, "formats_id_seq")
-                .build();
+                .buildQuery();
     }
 
 }

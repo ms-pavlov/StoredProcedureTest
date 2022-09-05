@@ -1,6 +1,6 @@
 package ru.kilai.utility.tests;
 
-import ru.kilai.parameters.QueryParameters;
+import ru.kilai.query.parameters.QueryParameters;
 import ru.kilai.query.SimpleSelectQueryBuilder;
 
 import java.sql.Connection;
@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static ru.kilai.query.SimpleJDBCQueryExecutor.executor;
+import static ru.kilai.query.executor.SimpleJDBCQueryExecutor.executor;
 
 public class SelectLiquibaseTestBuilder implements LiquibaseTestBuilder{
     private final Connection connection;
@@ -50,7 +50,7 @@ public class SelectLiquibaseTestBuilder implements LiquibaseTestBuilder{
 
     @Override
     public LiquibaseTest build() {
-        var statement = SimpleSelectQueryBuilder.builder(connection, parameters).build();
+        var statement = SimpleSelectQueryBuilder.builder(connection, parameters).buildQuery();
         return new SimpleLiquibaseTest(statement, this::makeSelectTest);
     }
 

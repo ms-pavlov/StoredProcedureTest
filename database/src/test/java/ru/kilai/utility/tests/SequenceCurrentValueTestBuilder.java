@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ru.kilai.query.SimpleJDBCQueryExecutor.executor;
+import static ru.kilai.query.executor.SimpleJDBCQueryExecutor.executor;
 
 public class SequenceCurrentValueTestBuilder implements LiquibaseTestBuilder {
 
@@ -29,7 +29,7 @@ public class SequenceCurrentValueTestBuilder implements LiquibaseTestBuilder {
 
     @Override
     public LiquibaseTest build() {
-        var statement = SequenceCurrentValueQueryBuilder.builder(connection, sqlObjectName).build();
+        var statement = SequenceCurrentValueQueryBuilder.builder(connection, sqlObjectName).buildQuery();
         return new SimpleLiquibaseTest(statement, this::makeSequenceTest);
     }
 
