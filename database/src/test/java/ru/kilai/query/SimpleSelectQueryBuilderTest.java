@@ -1,6 +1,7 @@
 package ru.kilai.query;
 
 import org.junit.jupiter.api.Test;
+import ru.kilai.parameters.QueryParameters;
 import ru.kilai.parameters.SimpleQueryParameters;
 import ru.kilai.utility.PostgresConnectionPool;
 
@@ -13,8 +14,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.*;
 
 class SimpleSelectQueryBuilderTest {
-    private static final List<String> FORMAT_SELECT_PARAMS = List.of("formats_name", "formats_id");
-    private static final  String SQL = String.format("SELECT %s FROM %s", new SimpleQueryParameters(FORMAT_SELECT_PARAMS).getFieldsNames(), "formats");
+    private static final QueryParameters FORMAT_SELECT_PARAMS = new SimpleQueryParameters(List.of("formats_name", "formats_id"), "formats");
+    private static final  String SQL = String.format("SELECT %s FROM %s", FORMAT_SELECT_PARAMS.getFieldsNames(), FORMAT_SELECT_PARAMS.getSqlObject());
 
 
     @Test
@@ -35,7 +36,7 @@ class SimpleSelectQueryBuilderTest {
     }
 
     private PreparedStatement prepStatement(Connection connection) {
-        return SimpleSelectQueryBuilder.builder(connection, "formats", new SimpleQueryParameters(FORMAT_SELECT_PARAMS))
+        return SimpleSelectQueryBuilder.builder(connection, FORMAT_SELECT_PARAMS)
                 .build();
     }
 }

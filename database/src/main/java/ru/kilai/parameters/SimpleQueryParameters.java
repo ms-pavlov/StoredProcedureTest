@@ -10,28 +10,34 @@ import java.util.stream.Collectors;
 public class SimpleQueryParameters implements QueryParameters {
     private final List<String> fields;
     private final List<Object> values;
+    private final String getSqlObject;
 
-    public SimpleQueryParameters() {
+    public SimpleQueryParameters(String getSqlObject) {
+        this.getSqlObject = getSqlObject;
         this.fields = new ArrayList<>();
         this.values = new ArrayList<>();
     }
 
-    public SimpleQueryParameters(Map<String, Object> columns) {
-        this();
+    public SimpleQueryParameters(Map<String, Object> columns, String getSqlObject) {
+        this(getSqlObject);
         columns.keySet().forEach(key -> {
             fields.add(key);
             values.add(columns.get(key));
         });
     }
 
-    public SimpleQueryParameters(List<String> columns) {
-        this();
+    public SimpleQueryParameters(List<String> columns, String getSqlObject) {
+        this(getSqlObject);
         columns.forEach(name -> {
             fields.add(name);
             values.add(null);
         });
     }
 
+    @Override
+    public String getSqlObject() {
+        return getSqlObject;
+    }
 
     @Override
     public String getFieldsNames() {

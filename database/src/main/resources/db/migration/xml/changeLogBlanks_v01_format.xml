@@ -4,22 +4,21 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
 		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
-    <changeSet id="blanks_v3_building" author="ms-pavlov" context="main">
+    <changeSet id="blanks_v01_format" author="ms-pavlov" context="main">
         <createSequence cacheSize="371717"
                         dataType="bigint"
                         incrementBy="1"
                         maxValue="9223372036854775807"
                         minValue="1"
                         schemaName="public"
-                        sequenceName="building_id_seq"
-                        startValue="1"/>
+                        sequenceName="formats_id_seq"
+                        startValue="7"/>
 
-        <createTable tableName="building">
-            <column name="building_id" type="BIGINT" defaultValueSequenceNext="building_id_seq">
-                <constraints primaryKey="true" primaryKeyName="building_pkey" nullable="false"/>
+        <createTable tableName="format" schemaName="public">
+            <column name="formats_id" type="BIGINT" defaultValueSequenceNext="formats_id_seq">
+                <constraints primaryKey="true" primaryKeyName="format_pkey" nullable="false"/>
             </column>
-            <column name="building_name" type="VARCHAR(255)"/>
-            <column name="building_description" type="VARCHAR(1024)"/>
+            <column name="formats_name" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
 </databaseChangeLog>

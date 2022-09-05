@@ -16,7 +16,6 @@ import static ru.kilai.query.SimpleJDBCQueryExecutor.executor;
 
 public class SelectLiquibaseTestBuilder implements LiquibaseTestBuilder{
     private final Connection connection;
-    private String sqlObjectName;
     private QueryParameters parameters;
 
     private Map<String, Object> expectParameters;
@@ -36,7 +35,6 @@ public class SelectLiquibaseTestBuilder implements LiquibaseTestBuilder{
     }
 
     public SelectLiquibaseTestBuilder sqlObjectName(String sqlObjectName) {
-        this.sqlObjectName = sqlObjectName;
         return this;
     }
 
@@ -52,7 +50,7 @@ public class SelectLiquibaseTestBuilder implements LiquibaseTestBuilder{
 
     @Override
     public LiquibaseTest build() {
-        var statement = SimpleSelectQueryBuilder.builder(connection, sqlObjectName, parameters).build();
+        var statement = SimpleSelectQueryBuilder.builder(connection, parameters).build();
         return new SimpleLiquibaseTest(statement, this::makeSelectTest);
     }
 

@@ -10,7 +10,6 @@ import static ru.kilai.query.SimpleJDBCQueryExecutor.executor;
 
 public class InsertLiquibaseTestBuilder implements LiquibaseTestBuilder {
     private final Connection connection;
-    private String sqlObjectName;
     private QueryParameters parameters;
 
     private InsertLiquibaseTestBuilder(Connection connection) {
@@ -27,13 +26,12 @@ public class InsertLiquibaseTestBuilder implements LiquibaseTestBuilder {
     }
 
     public InsertLiquibaseTestBuilder sqlObjectName(String sqlObjectName) {
-        this.sqlObjectName = sqlObjectName;
         return this;
     }
 
     @Override
     public LiquibaseTest build() {
-        var statement = InsertQueryBuilder.builder(connection, sqlObjectName, parameters).build();
+        var statement = InsertQueryBuilder.builder(connection, parameters).build();
         return new SimpleLiquibaseTest(statement, preparedStatement -> assertEquals(1, executor(statement).executeUpdate()));
     }
 }

@@ -14,11 +14,11 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class ContactsTableTest {
-    private static final Map<String, Object> CONTACTS_INSERT_PARAMS = Map.of("contact_name", "Менеджер",
-            "contact_phone", "5223232");
-    private static final List<String> CONTACTS_SELECT_PARAMS = List.of("contact_id", "contact_name", "contact_phone",
-            "contact_department_id", "contact_orders_count");
+public class PersonTableTest {
+    private static final Map<String, Object> PERSON_INSERT_PARAMS = Map.of("person_name", "Менеджер",
+            "person_phone", "5223232");
+    private static final List<String> PERSON_SELECT_PARAMS = List.of("person_id", "person_name", "person_phone",
+            "person_department_id", "person_orders_count");
 
     @Test
     void changeLogContacts() {
@@ -26,13 +26,13 @@ public class ContactsTableTest {
             LiquibaseTestMaker.prepareMaker("classpath:/db/migration/master.xml", connection)
                     .addContext("main")
                     .makeTestsWithRollback(
-                            InsertAndSelectLiquibaseTestBuilder.builder(connection, "contact")
-                                    .insertParameters(CONTACTS_INSERT_PARAMS)
-                                    .selectParameters(CONTACTS_SELECT_PARAMS)
+                            InsertAndSelectLiquibaseTestBuilder.builder(connection, "person")
+                                    .insertParameters(PERSON_INSERT_PARAMS)
+                                    .selectParameters(PERSON_SELECT_PARAMS)
                                     .test(this::checks)
                                     .build(),
                             SequenceCurrentValueTestBuilder.builder(connection)
-                                    .sqlObjectName("contact_id_seq")
+                                    .sqlObjectName("person_id_seq")
                                     .build()
                     );
         } catch (SQLException e) {
@@ -42,8 +42,8 @@ public class ContactsTableTest {
 
     private void checks(ResultSet result) {
         try {
-            assertNotNull(result.getObject("contact_id"));
-            assertEquals(0L, result.getObject("contact_orders_count"));
+            assertNotNull(result.getObject("person_id"));
+            assertEquals(0L, result.getObject("person_orders_count"));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

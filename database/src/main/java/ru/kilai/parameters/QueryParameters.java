@@ -6,6 +6,8 @@ import java.util.Map;
 
 public interface QueryParameters {
 
+    String getSqlObject();
+
     String getFieldsNames();
 
     String getParametersMask();

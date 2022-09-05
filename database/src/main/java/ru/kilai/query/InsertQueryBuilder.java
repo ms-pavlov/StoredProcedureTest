@@ -13,20 +13,20 @@ public class InsertQueryBuilder extends AbstractQueryBuilder {
     private static final String QUERY_TEMPLATE = "INSERT INTO %s (%s) VALUES (%s)";
 
     private final QueryParameters parameters;
-    private final String sqlObjectName;
 
-    private InsertQueryBuilder(Connection connection, String sqlObjectName, QueryParameters parameters) {
+    private InsertQueryBuilder(Connection connection, QueryParameters parameters) {
         super(connection);
         this.parameters = parameters;
-        this.sqlObjectName = sqlObjectName;
     }
 
-    public static InsertQueryBuilder builder(Connection connection, String sqlObjectName, QueryParameters parameters) {
-        return new InsertQueryBuilder(connection, sqlObjectName, parameters);
+    public static InsertQueryBuilder builder(Connection connection, QueryParameters parameters) {
+        return new InsertQueryBuilder(connection, parameters);
     }
 
     private String getQuerySql() {
-        return String.format(QUERY_TEMPLATE, sqlObjectName, parameters.getFieldsNames(), parameters.getParametersMask());
+        var sql = String.format(QUERY_TEMPLATE, parameters.getSqlObject(), parameters.getFieldsNames(), parameters.getParametersMask());
+        log.debug(sql);
+        return String.format(sql);
     }
 
     @Override

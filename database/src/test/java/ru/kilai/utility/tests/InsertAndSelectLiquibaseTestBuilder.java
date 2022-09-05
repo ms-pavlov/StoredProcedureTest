@@ -47,13 +47,11 @@ public class InsertAndSelectLiquibaseTestBuilder implements LiquibaseTestBuilder
     public LiquibaseTest build() {
         return () -> {
             InsertLiquibaseTestBuilder.builder(connection)
-                    .sqlObjectName(sqlObjectName)
-                    .parameters(new SimpleQueryParameters(insertParameters))
+                    .parameters(new SimpleQueryParameters(insertParameters, sqlObjectName))
                     .build()
                     .makeTest();
             SelectLiquibaseTestBuilder.builder(connection)
-                    .sqlObjectName(sqlObjectName)
-                    .parameters(new SimpleQueryParameters(selectParameters))
+                    .parameters(new SimpleQueryParameters(selectParameters, sqlObjectName))
                     .expectParameters(insertParameters)
                     .test(resultSet -> {
                         try {

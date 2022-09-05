@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class OrderListTableTest {
     private static final List<String> ORDER_LIST_SELECT_PARAMS = List.of("order_list_id", "order_list_create_date",
-            "order_list_contact_id", "order_list_is_complete");
+            "order_list_person_id", "order_list_is_complete");
 
     @Test
     void changeLogContacts() {

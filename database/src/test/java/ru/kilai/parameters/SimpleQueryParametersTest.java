@@ -16,31 +16,38 @@ class SimpleQueryParametersTest {
 
     @Test
     void getFieldsNames() {
-        var parameters = new SimpleQueryParameters(TEST_PARAMETERS);
+        var parameters = new SimpleQueryParameters(TEST_PARAMETERS, "test");
         assertEquals("field", parameters.getFieldsNames());
 
-        parameters = new SimpleQueryParameters(List.of("field", "field2"));
+        parameters = new SimpleQueryParameters(List.of("field", "field2"), "test");
         assertEquals("field, field2", parameters.getFieldsNames());
 
     }
 
     @Test
     void getParametersMask() {
-        var parameters = new SimpleQueryParameters(TEST_PARAMETERS);
+        var parameters = new SimpleQueryParameters(TEST_PARAMETERS, "test");
         assertEquals("?", parameters.getParametersMask());
-        parameters = new SimpleQueryParameters(List.of("field", "field2"));
+        parameters = new SimpleQueryParameters(List.of("field", "field2"), "test");
         assertEquals("?, ?", parameters.getParametersMask());
     }
 
     @Test
     void setQueryParameters() throws SQLException {
-        var parameters = new SimpleQueryParameters(TEST_PARAMETERS);
+        var parameters = new SimpleQueryParameters(TEST_PARAMETERS, "test");
 
         var statement = mock(PreparedStatement.class);
 
         parameters.setQueryParameters(statement);
 
         verify(statement, times(1)).setObject(1, "value");
+
+    }
+
+    @Test
+    void getSqlObject() {
+        var parameters = new SimpleQueryParameters(TEST_PARAMETERS, "test");
+        assertEquals("test", parameters.getSqlObject());
 
     }
 }

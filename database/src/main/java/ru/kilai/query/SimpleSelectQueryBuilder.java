@@ -13,19 +13,18 @@ public class SimpleSelectQueryBuilder extends AbstractQueryBuilder {
     private static final String QUERY_TEMPLATE = "SELECT %s FROM %s";
 
     private final QueryParameters parameters;
-    private final String sqlObjectName;
-    public SimpleSelectQueryBuilder(Connection connection, String sqlObjectName, QueryParameters parameters) {
+
+    public SimpleSelectQueryBuilder(Connection connection, QueryParameters parameters) {
         super(connection);
         this.parameters = parameters;
-        this.sqlObjectName = sqlObjectName;
     }
 
-    public static SimpleSelectQueryBuilder builder(Connection connection, String sqlObjectName, QueryParameters parameters) {
-        return new SimpleSelectQueryBuilder(connection, sqlObjectName, parameters);
+    public static SimpleSelectQueryBuilder builder(Connection connection, QueryParameters parameters) {
+        return new SimpleSelectQueryBuilder(connection, parameters);
     }
 
     private String getQuerySql() {
-        return String.format(QUERY_TEMPLATE, parameters.getFieldsNames(), sqlObjectName);
+        return String.format(QUERY_TEMPLATE, parameters.getFieldsNames(), parameters.getSqlObject());
     }
 
     @Override
